@@ -1,0 +1,19 @@
+<div [hidden]="!debugToolsEnabled">
+  <div class="debug-tools" *ngIf="!collapsed">
+    <h5 class="debug-tools-title">Debug Tools</h5>
+    <div class="confirmation">
+      <button role="button" (click)="collapseToolWindow()">
+        <span>&times;</span>
+      </button>
+    </div>
+    <ul>
+      <li>
+        <ps-action-button (click)="deleteCurrentUser()">Delete Current User</ps-action-button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="debug-tools" *ngIf="collapsed">
+    <h5 class="debug-tools-title" (click)="collapseToolWindow()">Debug Tools</h5>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+@import '../../../variables.scss';
+:host {
+  .message {
+    color: $black;
+    display: block;
+    float: center;
+    outline: 0;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+}

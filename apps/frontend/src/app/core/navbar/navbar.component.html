@@ -1,0 +1,10 @@
+<ul>
+  <li routerLink="/">Parkside Stack</li>
+  <li i18n="@@login" class="menu-right-item" *ngIf="shouldShowLoginOption()" routerLink="/login">
+    Login
+  </li>
+  <li i18n="@@logout" class="menu-right-item" *ngIf="isUserLoggedIn" (click)="authService.logout()">
+    Logout
+  </li>
+  <ps-language-switcher></ps-language-switcher>
+</ul>

@@ -1,0 +1,40 @@
+<ng-container *ngIf="isUserVerified; else userEmailNotVerified">
+  <ng-container *ngIf="isUserLoggedIn; else isNotLoggedIn">
+    <ps-info-card
+      i18n-title="@@emailVerified"
+      title="Email Verified"
+      i18n-message="@@verifyUserSuccess"
+      message="Voila! You have successfully verified your email address:"
+      i18n-buttonTitle="@@openAccount"
+      buttonTitle="Open Account"
+      buttonRouterLink="/account"
+    >
+      <h5 class="text-center">{{ userEmail }}</h5>
+    </ps-info-card>
+  </ng-container>
+  <ng-template #isNotLoggedIn>
+    <ps-info-card
+      i18n-title="@@emailVerified"
+      title="Email Verified"
+      i18n-message="@@verifyUserSuccess"
+      message="Voila! You have successfully verified your email address:"
+      i18n-buttonTitle="@@openLogin"
+      buttonTitle="Open Login"
+      buttonRouterLink="/login"
+    >
+    </ps-info-card>
+  </ng-template>
+</ng-container>
+<ng-template #userEmailNotVerified>
+  <ps-info-card
+    i18n-title="@@emailVerificationFailed"
+    title="Email Verification Failed"
+    i18n-message="@@verifyUserError"
+    message="We couldn't verify your email address. Please, check your verification code below and try again."
+    i18n-buttonTitle="@@verifyCode"
+    buttonTitle="Verify Code"
+    (click)="verifyUser()"
+  >
+    <input type="text" [(ngModel)]="code" i18n-placeholder="@@code" placeholder="Code" class="form-control" />
+  </ps-info-card>
+</ng-template>

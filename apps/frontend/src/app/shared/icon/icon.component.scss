@@ -1,0 +1,12 @@
+:host {
+  .icon {
+    display: inline-block;
+    vertical-align: middle;
+
+    svg {
+      fill: currentColor;
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+}

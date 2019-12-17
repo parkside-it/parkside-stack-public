@@ -1,0 +1,52 @@
+<div class="wrapper">
+  <div class="form-box">
+    <h4 i18n="@@register" class="title">Register</h4>
+    <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+      <div>
+        <input
+          type="email"
+          name="email"
+          email
+          ngModel
+          #email="ngModel"
+          i18n-placeholder="@@email"
+          placeholder="Email"
+          required
+          autofocus
+          class="form-control"
+        />
+      </div>
+      <div>
+        <input
+          type="password"
+          name="password"
+          ngModel
+          #password="ngModel"
+          i18n-placeholder="@@password"
+          placeholder="Password"
+          required
+          class="form-control"
+        />
+      </div>
+      <ps-action-button
+        [disabled]="!registerForm.form.valid"
+        [loading]="isLoading"
+        i18n-loadingMessage="@@registering"
+        loadingMessage="Registering..."
+        i18n="@@register"
+      >
+        Register
+      </ps-action-button>
+    </form>
+    <small>
+      <ng-container i18n="@@alreadyAMemeber">Already a member?</ng-container>
+      <a i18n="@@signInHere" routerLink="/login" class="auth-link">Sign in here</a>
+    </small>
+  </div>
+</div>
+<span #loginErrorMessage class="hidden" i18n="@@loginError"
+  >An error has occured during the login process, please try again.</span
+>
+<span #registerErrorMessage class="hidden" i18n="@@registerError"
+  >An error has occured during the registration process, please try again.</span
+>

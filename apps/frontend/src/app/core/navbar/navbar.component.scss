@@ -1,0 +1,28 @@
+@import 'variables';
+
+ul {
+  background-color: $navbar-background;
+  list-style-type: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+li {
+  color: $black;
+  cursor: pointer;
+  display: block;
+  float: left;
+  outline: 0;
+  padding: 14px 16px;
+  text-align: center;
+  text-decoration: none;
+
+  &:hover {
+    background-color: $navbar-background-hover;
+  }
+}
+
+.menu-right-item {
+  float: right;
+}

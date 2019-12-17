@@ -1,0 +1,15 @@
+<div
+  *ngIf="opened"
+  class="message"
+  [ngClass]="{ error: types.error === message.type, success: types.success === message.type }"
+>
+  <div class="text">
+    <ps-icon [icon]="getIcon()"></ps-icon>
+    {{ message.text }}
+  </div>
+  <div class="confirmation">
+    <button role="button" (click)="close()">
+      <span>&times;</span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+@import '../../../variables.scss';
+:host {
+  .message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid $border-color-default;
+    padding: 0.5rem;
+    font-size: 1rem;
+
+    &.error {
+      color: $message-error-color;
+      border-color: $message-error-border-color;
+      background-color: $message-error-background;
+    }
+
+    &.success {
+      color: $message-success-color;
+      border-color: $message-success-border-color;
+      background-color: $message-success-background;
+    }
+
+    .confirmation {
+      button {
+        margin: 0;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        color: inherit;
+        font-size: 1.5rem;
+        line-height: 1;
+        padding: 0 0.4rem;
+
+        span {
+          position: relative;
+          top: -1px;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 1);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<div class="wrapper">
+  <div class="form-box">
+    <h3 class="text-center">{{ title }}</h3>
+    <p class="message text-center">{{ message }}</p>
+    <ng-content></ng-content>
+    <ps-action-button [routerLink]="buttonRouterLink" (click)="handleButtonClick()">
+      {{ buttonTitle }}
+    </ps-action-button>
+  </div>
+</div>

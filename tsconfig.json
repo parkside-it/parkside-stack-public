@@ -1,0 +1,34 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@psf-core": ["apps/frontend/src/app/core/index.ts"],
+      "@psf-core/*": ["apps/frontend/src/app/core/*"],
+      "@psf-auth": ["apps/frontend/src/app/auth/index.ts"],
+      "@psf-shared": ["apps/frontend/src/app/shared/index.ts"],
+      "@psf-shared/*": ["apps/frontend/src/app/shared/*"],
+      "@psb-shared": ["apps/api/src/app/shared/index.ts"],
+      "@psb-users": ["apps/api/src/app/users/index.ts"],
+      "@psb-environments": ["apps/api/src/environments/index.ts"],
+      "@parkside-stack/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@parkside-stack/api/*": ["apps/api/src/*"],
+      "@psf/*": ["apps/frontend/src/app/*"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

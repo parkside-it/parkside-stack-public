@@ -1,0 +1,40 @@
+.debug-tools {
+  padding: 0 10px;
+  position: absolute;
+  bottom: 0;
+  right: 10%;
+  border-style: solid;
+  z-index: 999;
+  background: white;
+
+  .debug-tools-title {
+    float: left;
+    margin: 5px;
+    cursor: pointer;
+  }
+
+  .confirmation {
+    button {
+      height: auto;
+      width: auto;
+      float: right;
+      margin: 0;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      color: inherit;
+      font-size: 1.5rem;
+      line-height: 1;
+      padding: 0 0.4rem;
+
+      span {
+        position: relative;
+        top: -1px;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 1);
+      }
+    }
+  }
+}

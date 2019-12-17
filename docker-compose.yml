@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  db:
+    build: db
+    container_name: ps_stack_db
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '--silent', '-p$$DB_PASSWORD', '-h', '127.0.0.1']
+      interval: 4s
+      timeout: 2s
+      retries: 20
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: '$DB_DATABASE'
+      MYSQL_ROOT_PASSWORD: '$DB_PASSWORD'
+      MYSQL_PORT: '$DB_PORT'
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata:/var/lib/mysql
+  adminer:
+    image: adminer
+    container_name: ps_stack_adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+
+volumes:
+  dbdata:

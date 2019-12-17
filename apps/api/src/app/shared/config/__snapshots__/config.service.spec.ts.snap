@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfigService should match snapshot 1`] = `
+ConfigService {
+  "envConfig": Object {
+    "ACCESS_TOKEN_EXPIRATION_SECONDS": "3600",
+    "API_PATH": "api",
+    "API_VERSION": "0.1",
+    "BASE_URL": "http://localhost:4200",
+    "DB_DATABASE": "test",
+    "DB_HOST": "localhost",
+    "DB_PASSWORD": "password",
+    "DB_PORT": "3306",
+    "DB_USER": "root",
+    "EMAIL_DEFAULT_SENDER": "Firstname Lastname <user@example.com>",
+    "EMAIL_SMTP_SECRET": "some_secret",
+    "EMAIL_TEMPLATE_DIRECTORY": "apps/api/src/templates/email",
+    "ENV": "development",
+    "JWT_SECRET": "jwtsecret",
+    "PASSWORD_RESET_TOKEN_EXPIRATION_SECONDS": "3600",
+  },
+}
+`;

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<head>
+  <style>
+    * {
+      font-family: sans-serif;
+    }
+
+    body {
+      margin: 3rem;
+    }
+
+    button {
+      font-size: 0.9rem;
+      margin: 1.25rem 0 0 0;
+      padding: 0.38rem 0.75rem;
+      text-transform: uppercase;
+      width: 100%;
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    p {
+      word-wrap: break-word;
+    }
+
+    .title {
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .wrapper {
+      align-items: center;
+      display: flex;
+      flex-flow: row nowrap;
+      height: 93vh;
+      justify-content: center;
+    }
+
+    .container {
+      border: 0.06rem solid #d3d3d3;
+      border-radius: 0.25rem;
+      width: 24rem;
+      padding: 1.25rem;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="wrapper center">
+    <div class="container">
+      <h3 class="title">Hello,</h3>
+      <p>Please verify that your email address is {{ email }} and
+        that you entered it when signing up for Parkside
+        Stack.</p>
+      <a href="{{emailVerificationLink}}"><button>Verify Email</button></a>
+    </div>
+  </div>
+</body>
+
+</html>

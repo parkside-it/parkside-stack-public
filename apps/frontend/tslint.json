@@ -1,0 +1,8 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [true, "attribute", "ps", "camelCase"],
+    "component-selector": [true, "element", "ps", "kebab-case"],
+    "component-max-inline-declarations": [true, { "animations": 20, "styles": 4, "template": 4 }]
+  }
+}

@@ -1,0 +1,22 @@
+$black: #000;
+$gray: #808080;
+$gray-light: #d3d3d3;
+$gray-lightest: #eeeef0;
+$white: #fff;
+$green: #80de78;
+$red: #ff5c33;
+$blue: #007bff;
+
+$error: $red;
+$primary: $blue;
+$primary-hover: darken($blue, 5%);
+$primary-hover-border: darken($blue, 10%);
+$border-color-default: $gray-light;
+$navbar-background: $gray-lightest;
+$navbar-background-hover: darken($gray-lightest, 5%);
+$message-error-color: $error;
+$message-error-border-color: $error;
+$message-error-background: lighten($error, 35%);
+$message-success-color: $green;
+$message-success-border-color: $green;
+$message-success-background: lighten($green, 30%);

@@ -1,0 +1,5 @@
+<li class="menu-right-item" *ngFor="let locale of supportedLocales" value="{{ locale }}">
+  <a href="/{{ locale }}/">
+    {{ locale | uppercase }}
+  </a>
+</li>

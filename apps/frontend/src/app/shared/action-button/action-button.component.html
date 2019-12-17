@@ -1,0 +1,22 @@
+<button
+  [disabled]="disabled || loading"
+  [ngClass]="{ 'form-button': !(disabled || loading) }"
+  [routerLink]="buttonRouterLink"
+>
+  <span class="buttonContent">
+    <ng-container *ngIf="loading; else notLoading">
+      <span class="text overflow-ellipsis">
+        <ng-container *ngIf="loadingMessage; else defaultLoadingMessage">
+          {{ loadingMessage }}
+        </ng-container>
+        <ng-template #defaultLoadingMessage i18n="@@loading">
+          Loading...
+        </ng-template>
+      </span>
+      <span class="loadingSpinner"></span>
+    </ng-container>
+    <ng-template #notLoading>
+      <ng-content></ng-content>
+    </ng-template>
+  </span>
+</button>

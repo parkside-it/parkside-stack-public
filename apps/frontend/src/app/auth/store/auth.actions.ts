@@ -1,5 +1,11 @@
 import { createAction, props } from '@ngrx/store';
-import { AccessToken, CreateUserDto, LoginUserDto, User, VerificationParams } from '@parkside-stack/api-interfaces';
+import {
+  AccessTokenResponse,
+  CreateUserDto,
+  LoginUserDto,
+  User,
+  VerificationParams,
+} from '@parkside-stack/api-interfaces';
 
 const scope = {
   login: '[Auth/login],',
@@ -9,7 +15,10 @@ const scope = {
 
 export const login = createAction(`${scope.login} Login`, props<{ loginUserDto: LoginUserDto }>());
 export const loginRegister = createAction(`${scope.register} Login`, props<{ loginUserDto: LoginUserDto }>());
-export const loginSuccess = createAction(`${scope.login}, Login Success`, props<{ accessToken: AccessToken }>());
+export const loginSuccess = createAction(
+  `${scope.login}, Login Success`,
+  props<{ accessToken: AccessTokenResponse }>()
+);
 export const loginError = createAction(`${scope.login} Login Error`);
 export const register = createAction(`${scope.register} Register User`, props<{ createUserDto: CreateUserDto }>());
 export const registerSuccess = createAction(`${scope.register} Register Success`, props<{ user: User }>());

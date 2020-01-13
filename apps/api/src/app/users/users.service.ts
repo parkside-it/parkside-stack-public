@@ -1,16 +1,11 @@
 import { MailerService } from '@nest-modules/mailer';
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccessToken, CreateUserDto, FrontendPath, Response, User } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse, CreateUserDto, FrontendPath } from '@parkside-stack/api-interfaces';
 import { ConfigService, CryptoService, TokenService } from '@psb-shared';
+import { I18nService } from 'nestjs-i18n';
 import { Repository } from 'typeorm';
-import { EmailVerificationTokenPayload, PayloadService } from './payload';
+import { EmailVerificationTokenPayload, PayloadService, PayloadType } from './payload';
 import { UserEntity } from './user.entity';
 
 @Injectable()
@@ -21,7 +16,8 @@ export class UsersService {
     private readonly tokenService: TokenService,
     private readonly configService: ConfigService,
     private readonly cryptoService: CryptoService,
-    private readonly payloadService: PayloadService
+    private readonly payloadService: PayloadService,
+    private readonly i18n: I18nService
   ) {}
 
   async findOneById(id: number): Promise<UserEntity | undefined> {
@@ -57,9 +53,12 @@ export class UsersService {
     const result = await this.userRepository.insert(createUserDto);
     const userId = result.identifiers[0].id;
     const updatedUser = await this.findOneById(userId);
-    if (!updatedUser) {
-      throw new InternalServerErrorException(`just created user with id ${userId} could not be found`);
+
+    if (updatedUser === undefined) {
+      //created user could not be found
+      throw new NotFoundException();
     }
+
     const emailVerificationTokenPayload = this.payloadService.createEmailVerificationTokenPayload(
       updatedUser.id,
       updatedUser.email
@@ -69,7 +68,7 @@ export class UsersService {
     this.mailerService
       .sendMail({
         to: createUserDto.email,
-        subject: 'Verify Your Email Address',
+        subject: this.i18n.translate('messages.verification_email_subject', { lang: locale }),
         template: `welcome.${locale}.hbs`,
         context: {
           email: createUserDto.email,
@@ -85,8 +84,8 @@ export class UsersService {
     return updatedUser;
   }
 
-  async createAccessToken(user: UserEntity): Promise<AccessToken> {
-    const accessTokenPayload = this.payloadService.createAccessTokenPayload(user.id, user.email);
+  async createAccessToken(user: UserEntity): Promise<AccessTokenResponse> {
+    const accessTokenPayload = this.payloadService.createAccessTokenPayload(user.id);
     return { accessToken: await this.tokenService.createTokenAsync(accessTokenPayload) };
   }
 
@@ -101,31 +100,38 @@ export class UsersService {
     return updatedUser;
   }
 
-  async deleteById(id: number): Promise<Response> {
-    const { affected }: { affected?: number } = await this.userRepository.delete(id);
-    return { success: !!affected };
+  async deleteById(id: number): Promise<void> {
+    await this.userRepository.delete(id);
   }
 
-  async verification(token: string): Promise<User> {
+  async verification(token: string): Promise<UserEntity> {
     let payload: EmailVerificationTokenPayload;
 
     try {
       payload = await this.tokenService.verifyTokenAsync(token);
     } catch (error) {
-      throw new BadRequestException('invalid token');
+      //invalid token
+      throw new BadRequestException();
+    }
+
+    if (payload.type !== PayloadType.EmailVerification) {
+      //invalid token type
+      throw new BadRequestException();
     }
 
     const userId = payload['sub'];
 
     const user = await this.findOneById(userId);
     if (user === undefined) {
-      throw new NotFoundException('user not found');
+      //user not found
+      throw new BadRequestException();
     }
 
     if (user.email === payload.email) {
       user.isEmailVerified = true;
     } else {
-      throw new BadRequestException('token cannot be used to verify current user email');
+      //invalid token email
+      throw new BadRequestException();
     }
 
     return this.update(user);

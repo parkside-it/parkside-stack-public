@@ -2,9 +2,10 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { AccessToken, LoginUserDto, User } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse, LoginUserDto, User } from '@parkside-stack/api-interfaces';
 import { MessageType } from '@psf-core/model/message';
 import { setMessage } from '@psf-core/store/core.actions';
+import { selectIsLoading } from '@psf-core/store/core.selectors';
 import { LocalStorageKeys } from '@psf-shared';
 import { AppState } from '@psf/app.state';
 import { Subscription } from 'rxjs';
@@ -37,11 +38,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.router.navigate(['/']);
     }
 
-    const loadingSubscription = this.store$
-      .pipe(select((state: AppState) => state.core.isLoading))
-      .subscribe((isLoading: boolean) => {
-        this.isLoading = isLoading;
-      });
+    const loadingSubscription = this.store$.pipe(select(selectIsLoading)).subscribe((isLoading: boolean) => {
+      this.isLoading = isLoading;
+    });
 
     const loginErrorSubscription = this.store$.select(selectLoginError).subscribe((error: boolean) => {
       if (error && this.loginErrorMessage) {
@@ -51,22 +50,24 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     });
 
-    const accessTokenSubscription = this.store$.select(selectAccessToken).subscribe((accessToken: AccessToken) => {
-      if (accessToken) {
-        this.isUserLoggedIn = true;
-        localStorage.setItem(LocalStorageKeys.UserToken, accessToken.accessToken);
-        this.authService.me().subscribe((user: User) => {
-          this.store$.dispatch(setUser({ user }));
-        });
+    const accessTokenSubscription = this.store$
+      .select(selectAccessToken)
+      .subscribe((accessToken: AccessTokenResponse) => {
+        if (accessToken) {
+          this.isUserLoggedIn = true;
+          localStorage.setItem(LocalStorageKeys.UserToken, accessToken.accessToken);
+          this.authService.me().subscribe((user: User) => {
+            this.store$.dispatch(setUser({ user }));
+          });
 
-        const path: string | null = this.activatedRoute.snapshot.queryParamMap.get('redirectTo');
-        if (path) {
-          this.router.navigate([`/${path}`]);
-        } else {
-          this.router.navigate(['/']);
+          const path: string | null = this.activatedRoute.snapshot.queryParamMap.get('redirectTo');
+          if (path) {
+            this.router.navigate([`/${path}`]);
+          } else {
+            this.router.navigate(['/']);
+          }
         }
-      }
-    });
+      });
 
     this.subscriptions.push(loadingSubscription, loginErrorSubscription, accessTokenSubscription);
   }

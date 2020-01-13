@@ -11,12 +11,13 @@ describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
   let store: MockStore<{ user: null }>;
+  const initialState = { auth: {} };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [RegisterComponent],
       imports: [HttpClientTestingModule, FormsModule, RouterTestingModule, SharedModule],
-      providers: [provideMockStore({})],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
 
     store = TestBed.get(Store);

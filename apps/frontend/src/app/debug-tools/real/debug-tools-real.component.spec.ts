@@ -11,6 +11,7 @@ import { DebugToolsRealComponent } from './debug-tools-real.component';
 describe('RealComponent', () => {
   let component: DebugToolsRealComponent;
   let fixture: ComponentFixture<DebugToolsRealComponent>;
+  const initialState = { auth: {} };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -21,7 +22,7 @@ describe('RealComponent', () => {
           provide: DebugToolsService,
           useClass: DebugToolsRealService,
         },
-        provideMockStore(),
+        provideMockStore({ initialState }),
       ],
     }).compileComponents();
   }));

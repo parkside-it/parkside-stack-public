@@ -9,12 +9,13 @@ describe('NavbarComponent', () => {
   let component: NavbarComponent;
   let fixture: ComponentFixture<NavbarComponent>;
   let store: MockStore<{ user: null }>;
+  const initialState = { auth: {} };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [NavbarComponent, LanguageSwitcherComponent],
       imports: [HttpClientTestingModule, RouterTestingModule],
-      providers: [provideMockStore()],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
 
     store = TestBed.get(Store);

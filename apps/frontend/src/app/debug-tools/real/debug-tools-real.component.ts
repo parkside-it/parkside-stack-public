@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
-import { AccessToken } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse } from '@parkside-stack/api-interfaces';
 import { selectAccessToken } from '@psf-auth';
 import { AppState } from '@psf/app.state';
 import { DebugToolsService } from '@psf/debug-tools/debug-tools.service';
@@ -19,9 +19,11 @@ export class DebugToolsRealComponent implements OnInit, OnDestroy {
   constructor(private debugTools: DebugToolsService, private store$: Store<AppState>) {}
 
   ngOnInit(): void {
-    const accessTokenSubscription = this.store$.pipe(select(selectAccessToken)).subscribe((token: AccessToken) => {
-      this.debugToolsEnabled = !!token;
-    });
+    const accessTokenSubscription = this.store$
+      .pipe(select(selectAccessToken))
+      .subscribe((token: AccessTokenResponse) => {
+        this.debugToolsEnabled = !!token;
+      });
 
     this.subscriptions.push(accessTokenSubscription);
   }

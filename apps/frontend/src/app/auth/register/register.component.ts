@@ -2,7 +2,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { AccessToken, CreateUserDto, User } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse, CreateUserDto, User } from '@parkside-stack/api-interfaces';
 import { MessageType } from '@psf-core/model/message';
 import { setMessage } from '@psf-core/store/core.actions';
 import { LocalStorageKeys } from '@psf-shared';
@@ -40,7 +40,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       }
     });
 
-    const tokenSubscription = this.store$.select(selectAccessToken).subscribe((accessToken: AccessToken) => {
+    const tokenSubscription = this.store$.select(selectAccessToken).subscribe((accessToken: AccessTokenResponse) => {
       if (accessToken) {
         localStorage.setItem(LocalStorageKeys.UserToken, accessToken.accessToken);
         this.router.navigate(['/verify']);

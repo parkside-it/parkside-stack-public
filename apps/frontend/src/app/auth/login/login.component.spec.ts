@@ -9,12 +9,13 @@ import { SharedModule } from '@psf-shared';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  const initialState = { auth: {}, core: {} };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
       imports: [HttpClientTestingModule, FormsModule, RouterTestingModule, SharedModule],
-      providers: [provideMockStore()],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   }));
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { AccessToken, FrontendPath } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse, FrontendPath } from '@parkside-stack/api-interfaces';
 import { AppState } from '@psf/app.state';
 import { selectAccessToken } from '@psf/auth/store/auth.selectors';
 
@@ -12,7 +12,7 @@ export class AuthGuardService implements CanActivate {
   isUserLoggedIn: boolean = false;
 
   constructor(private router: Router, private store$: Store<AppState>) {
-    this.store$.pipe(select(selectAccessToken)).subscribe((token: AccessToken) => {
+    this.store$.pipe(select(selectAccessToken)).subscribe((token: AccessTokenResponse) => {
       this.isUserLoggedIn = !!token;
     });
   }

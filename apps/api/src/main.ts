@@ -1,6 +1,6 @@
 import { HealthChecker, HealthEndpoint, LivenessEndpoint, ReadinessEndpoint } from '@cloudnative/health-connect';
-import { InternalServerErrorException, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { ClassSerializerInterceptor, InternalServerErrorException, ValidationPipe } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from '@parkside-stack/api/app/app.module';
 import * as dotenvExt from 'dotenv-extended';
@@ -18,22 +18,22 @@ async function bootstrap(): Promise<any> {
       transform: true,
     })
   );
-  const options = new DocumentBuilder()
-    .setTitle('Parkside Stack')
-    .setDescription('The API for the Parkside Stack Application')
-    .setVersion(process.env.API_VERSION as string)
-    .setBasePath(process.env.API_PATH as string)
-    .addBearerAuth()
-    .build();
-
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('docs', app, document);
-
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   const globalPrefix = process.env.API_PATH;
   if (!globalPrefix) {
     throw new InternalServerErrorException(`environment variable API_PATH could not be resolved`);
   }
   app.setGlobalPrefix(globalPrefix);
+
+  const options = new DocumentBuilder()
+    .setTitle('Parkside Stack')
+    .setDescription('The API for the Parkside Stack Application')
+    .setVersion(process.env.API_VERSION as string)
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('docs', app, document);
 
   // setup middlewares
   // Kubernetes health endpoints

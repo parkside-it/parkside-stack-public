@@ -9,12 +9,13 @@ describe('EmailVerificationSentComponent', () => {
   let component: EmailVerificationSentComponent;
   let fixture: ComponentFixture<EmailVerificationSentComponent>;
   let store: MockStore<{ user: null }>;
+  const initialState = { auth: {} };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [EmailVerificationSentComponent],
       imports: [RouterTestingModule, SharedModule],
-      providers: [provideMockStore({})],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
 
     store = TestBed.get(Store);

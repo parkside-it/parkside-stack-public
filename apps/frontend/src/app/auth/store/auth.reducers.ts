@@ -1,5 +1,5 @@
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
-import { AccessToken, User } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse, User } from '@parkside-stack/api-interfaces';
 import {
   login,
   loginError,
@@ -16,7 +16,7 @@ import {
 } from './auth.actions';
 
 export interface AuthState {
-  accessToken: AccessToken | null;
+  accessToken: AccessTokenResponse | null;
   user: User | null;
   loginError: boolean;
   registerError: boolean;
@@ -36,7 +36,7 @@ const initialState: AuthState = {
 const _authReducer: Function = createReducer(
   initialState,
   on(login, loginRegister, (state: AuthState) => ({ ...state, loginError: false })),
-  on(loginSuccess, (state: AuthState, { accessToken }: { accessToken: AccessToken }) => ({
+  on(loginSuccess, (state: AuthState, { accessToken }: { accessToken: AccessTokenResponse }) => ({
     ...state,
     accessToken,
     loginError: false,

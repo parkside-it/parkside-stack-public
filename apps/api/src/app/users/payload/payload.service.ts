@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@psb-shared';
-import { AccessTokenPayload } from './access.token.payload';
+import { ConfigService, TokenPayload } from '@psb-shared';
 import { EmailVerificationTokenPayload } from './email-verification.token.payload';
-import { PasswordResetTokenPayload } from './password-reset.token.payload';
+import { PayloadType } from './payload-type';
 
 @Injectable()
 export class PayloadService {
@@ -14,27 +13,27 @@ export class PayloadService {
     return {
       sub,
       iat: this.dateNowInSeconds(),
-      type: 'email verification',
+      exp: this.dateNowInSeconds() + this.configService.emailVerificationTokenExpirationSeconds,
+      type: PayloadType.EmailVerification,
       email,
     };
   }
 
-  createAccessTokenPayload(sub: number, email: string): AccessTokenPayload {
+  createAccessTokenPayload(sub: number): TokenPayload {
     return {
       sub,
       iat: this.dateNowInSeconds(),
-      type: 'access',
-      email,
       exp: this.dateNowInSeconds() + this.configService.accessTokenExpirationSeconds,
+      type: PayloadType.Access,
     };
   }
 
-  createPasswordResetTokenPayload(sub: number): PasswordResetTokenPayload {
+  createPasswordResetTokenPayload(sub: number): TokenPayload {
     return {
       sub,
       iat: this.dateNowInSeconds(),
-      type: 'password reset',
       exp: this.dateNowInSeconds() + this.configService.passwordResetTokenExpirationSeconds,
+      type: PayloadType.PasswordReset,
     };
   }
 

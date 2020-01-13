@@ -1,13 +1,12 @@
-import { createSelector } from '@ngrx/store';
-import { AccessToken, User } from '@parkside-stack/api-interfaces';
-import { AppState } from '../../app.state';
-import { AuthState } from './auth.reducers';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { AccessTokenResponse, User } from '@parkside-stack/api-interfaces';
+import { authFeatureKey, AuthState } from './auth.reducers';
 
-const selectAuthState = (state: AppState): AuthState | null => state.auth;
+const selectAuthState = createFeatureSelector<AuthState>(authFeatureKey);
 
 export const selectAccessToken = createSelector(
   selectAuthState,
-  (auth: AuthState): AccessToken | null => auth.accessToken
+  (auth: AuthState): AccessTokenResponse | null => auth.accessToken
 );
 
 export const selectLoginError = createSelector(

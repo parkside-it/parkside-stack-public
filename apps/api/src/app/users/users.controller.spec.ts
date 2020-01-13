@@ -1,7 +1,13 @@
 import { MailerService } from '@nest-modules/mailer';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { AccessToken, CreateUserDto, CreateUserParams, LoginUserDto, User } from '@parkside-stack/api-interfaces';
+import {
+  AccessTokenResponse,
+  CreateUserDto,
+  CreateUserParams,
+  LoginUserDto,
+  User,
+} from '@parkside-stack/api-interfaces';
 import { CryptoService, TokenService } from '@psb-shared';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
@@ -53,7 +59,7 @@ describe('Auth Controller', () => {
 
   describe('login', () => {
     it('should return an access token', async () => {
-      const accessToken: AccessToken = { accessToken: 'jwt' };
+      const accessToken: AccessTokenResponse = { accessToken: 'jwt' };
       const loginUserDto: LoginUserDto = { email: 'Name', password: 'password' };
       jest.spyOn(usersService, 'createAccessToken').mockImplementation(async () => accessToken);
 

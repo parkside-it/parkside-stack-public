@@ -1,15 +1,21 @@
-import { ApiModelProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class User {
-  @ApiModelProperty({ example: 21 })
+  @ApiProperty({ example: 21 })
   id: number;
 
-  @ApiModelProperty({ example: 'me@home.at' })
+  @ApiProperty({ example: 'me@home.at' })
   email: string;
 
-  @ApiModelProperty({ example: 'password' })
+  @Exclude()
+  @ApiPropertyOptional({ example: 'password', readOnly: true })
   password?: string;
 
-  @ApiModelProperty({ example: true })
+  @ApiProperty({ example: true })
   isEmailVerified: boolean;
+
+  constructor(partial: Partial<User>) {
+    Object.assign(this, partial);
+  }
 }

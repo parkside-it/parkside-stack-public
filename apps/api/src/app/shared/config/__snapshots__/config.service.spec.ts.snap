@@ -18,6 +18,7 @@ ConfigService {
     "ENV": "development",
     "JWT_SECRET": "jwtsecret",
     "PASSWORD_RESET_TOKEN_EXPIRATION_SECONDS": "3600",
+    "TRANSLATION_DIRECTORY": "apps/api/src/locale",
   },
 }
 `;

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
-  AccessToken,
+  AccessTokenResponse,
   BackendPath,
   CreateUserDto,
   CreateUserParams,
@@ -31,14 +31,14 @@ export class AuthService {
     const tokenString = this.getToken();
 
     if (tokenString) {
-      const token: AccessToken = { accessToken: tokenString };
+      const token: AccessTokenResponse = { accessToken: tokenString };
       this.me().subscribe(
         (user: User) => {
           this.store$.dispatch(loginSuccess({ accessToken: token }));
           this.store$.dispatch(setUser({ user }));
         },
         () => {
-          this.store$.dispatch(loginError);
+          this.store$.dispatch(loginError());
           this.store$.dispatch(unsetUser());
         }
       );

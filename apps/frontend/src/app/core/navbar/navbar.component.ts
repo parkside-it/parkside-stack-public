@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { AccessToken, FrontendPath } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse, FrontendPath } from '@parkside-stack/api-interfaces';
 import { AuthService, selectAccessToken } from '@psf-auth';
 import { AppState } from '@psf/app.state';
 import { Subscription } from 'rxjs';
@@ -18,9 +18,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(public authService: AuthService, public router: Router, private store$: Store<AppState>) {}
 
   ngOnInit(): void {
-    const accessTokenSubscription = this.store$.pipe(select(selectAccessToken)).subscribe((token: AccessToken) => {
-      this.isUserLoggedIn = !!token;
-    });
+    const accessTokenSubscription = this.store$
+      .pipe(select(selectAccessToken))
+      .subscribe((token: AccessTokenResponse) => {
+        this.isUserLoggedIn = !!token;
+      });
 
     this.subscriptions.push(accessTokenSubscription);
   }

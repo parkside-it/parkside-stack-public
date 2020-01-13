@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import { AccessToken, User, VerificationParams } from '@parkside-stack/api-interfaces';
+import { AccessTokenResponse, User, VerificationParams } from '@parkside-stack/api-interfaces';
 import { MessageType } from '@psf-core/model/message';
 import { setMessage } from '@psf-core/store/core.actions';
 import { AppState } from '@psf/app.state';
@@ -46,7 +46,7 @@ export class EmailVerificationResponseComponent implements OnInit {
     });
 
     const accessTokenSubscription = this.store$.pipe(select(selectAccessToken)).subscribe(
-      (token: AccessToken) => {
+      (token: AccessTokenResponse) => {
         if (token) {
           this.isUserLoggedIn = true;
         }

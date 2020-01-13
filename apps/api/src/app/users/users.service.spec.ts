@@ -1,10 +1,11 @@
 import { MailerService } from '@nest-modules/mailer';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ConfigService, CryptoService, TokenService } from '@psb-shared';
+import { I18nService } from 'nestjs-i18n';
 import { InsertResult, Repository } from 'typeorm';
-import { EmailVerificationTokenPayload, PayloadService } from './payload';
+import { EmailVerificationTokenPayload, PayloadService, PayloadType } from './payload';
 import { UserEntity } from './user.entity';
 import { UsersService } from './users.service';
 
@@ -13,6 +14,7 @@ jest.mock('../shared/config/config.service');
 jest.mock('@nest-modules/mailer');
 jest.mock('typeorm/repository/Repository');
 jest.mock('./payload/payload.service');
+jest.mock('nestjs-i18n');
 
 describe('UserService', () => {
   let userService: UsersService;
@@ -20,6 +22,7 @@ describe('UserService', () => {
   let tokenService: TokenService;
   let cryptoService: CryptoService;
   let userEntityRepository: Repository<UserEntity>;
+  let i18nService: I18nService;
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -35,6 +38,7 @@ describe('UserService', () => {
         ConfigService,
         CryptoService,
         PayloadService,
+        I18nService,
       ],
     }).compile();
 
@@ -43,6 +47,7 @@ describe('UserService', () => {
     tokenService = module.get(TokenService);
     cryptoService = module.get(CryptoService);
     userEntityRepository = module.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    i18nService = module.get(I18nService);
   });
 
   describe('findOneById', () => {
@@ -90,6 +95,7 @@ describe('UserService', () => {
       jest.spyOn(userEntityRepository, 'insert').mockImplementation(async () => result);
       jest.spyOn(userEntityRepository, 'findOne').mockImplementation(async () => user);
       jest.spyOn(mailerService, 'sendMail').mockImplementation(async () => {});
+      jest.spyOn(i18nService, 'translate').mockImplementation((): string => 'email subject');
 
       expect(await userService.create(createUserDto, 'en')).toEqual(user);
     });
@@ -99,13 +105,13 @@ describe('UserService', () => {
     it('should return true on success', async () => {
       jest.spyOn(userEntityRepository, 'delete').mockImplementation(async () => ({ raw: '', affected: 1 }));
 
-      expect(await userService.deleteById(1)).toEqual({ success: true });
+      await userService.deleteById(1);
     });
 
     it('should return false on success', async () => {
       jest.spyOn(userEntityRepository, 'delete').mockImplementation(async () => ({ raw: '', affected: 0 }));
 
-      expect(await userService.deleteById(1)).toEqual({ success: false });
+      await userService.deleteById(1);
     });
   });
 
@@ -146,11 +152,12 @@ describe('UserService', () => {
       expect(tokenServiceVerifyTokenAsyncSpy).toBeCalledWith(token);
     });
 
-    it('should throw not found exception because user was not found', async () => {
+    it('should throw bad request exception because user was not found', async () => {
       const emailVerificationPayload: EmailVerificationTokenPayload = {
         sub: 42,
         iat: 1,
-        type: 'verification email',
+        exp: 1001,
+        type: PayloadType.EmailVerification,
         email: 'no@user.com',
       };
 
@@ -161,7 +168,7 @@ describe('UserService', () => {
         .spyOn(userEntityRepository, 'findOne')
         .mockImplementation(async () => undefined);
 
-      await expect(userService.verification(token)).rejects.toThrow(NotFoundException);
+      await expect(userService.verification(token)).rejects.toThrow(BadRequestException);
       expect(tokenServiceVerifyTokenAsyncSpy).toBeCalledWith(token);
       expect(userRepositoryFindOneSpy).toBeCalledWith({ id: emailVerificationPayload.sub });
     });
@@ -177,7 +184,8 @@ describe('UserService', () => {
       const emailVerificationPayload: EmailVerificationTokenPayload = {
         sub: user.id,
         iat: 1,
-        type: 'verification email',
+        exp: 1001,
+        type: PayloadType.EmailVerification,
         email: 'not@same.at',
       };
 
@@ -202,7 +210,8 @@ describe('UserService', () => {
       const emailVerificationPayload: EmailVerificationTokenPayload = {
         sub: user.id,
         iat: 1,
-        type: 'verification email',
+        exp: 1001,
+        type: PayloadType.EmailVerification,
         email: user.email,
       };
 

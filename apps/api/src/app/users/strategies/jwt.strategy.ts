@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { User } from '@parkside-stack/api-interfaces';
-import { ConfigService } from '@psb-shared';
+import { ConfigService, TokenPayload } from '@psb-shared';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { AccessTokenPayload } from '../payload';
+import { PayloadType } from '../payload';
 import { UsersService } from '../users.service';
 
 export const jwt = 'jwt';
@@ -24,7 +24,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, jwt) {
   /**
    * Extra user validation, JWT checks are already performed by `passport`
    */
-  async validate(payload: AccessTokenPayload): Promise<User> {
+  async validate(payload: TokenPayload): Promise<User> {
+    if (payload.type !== PayloadType.Access) {
+      throw new UnauthorizedException();
+    }
+
     const user = await this.userService.findOneById(payload.sub);
 
     if (!user) {

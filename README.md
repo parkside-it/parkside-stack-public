@@ -1,6 +1,6 @@
 # Parkside Stack
 
-![license](https://img.shields.io/badge/license-MIT-green)
+[![Build status](https://badge.buildkite.com/0bea2c3c6e4a9d08c6df43f9ce0edb8d9a4e26d1455516b02a.svg?branch=master)](https://buildkite.com/parkside-it/parkside-stack) ![license](https://img.shields.io/badge/license-MIT-green)
 
 The main purpose of the Parkside Stack is to be used as a starting point for new responsive web projects. It is based on Angular (UI), NestJS (Backend) using a MySQL database.
 
@@ -98,6 +98,8 @@ Run `nx dep-graph` to see a diagram of the dependencies of your projects.
 ## How to create a new release
 
 1. Verify that the current state of the project folder is what you want to release
+1. Update the CHANGELOG.md with new version information.
+1. Clone [parkside-stack-public](https://bitbucket.org/parksideit/parkside-stack-public)
 1. Run the release script from the project root: `sh ops/publish_tools/create-release.sh <dest>` where `dest` is the path to where you have the public project cloned to.
 1. Verify that there are no files in the public folder that disclose Parkside internal information.
 1. Create a new commit in the public repo with a new version tag. Make sure to follow the already used versioning scheme of the public repo.

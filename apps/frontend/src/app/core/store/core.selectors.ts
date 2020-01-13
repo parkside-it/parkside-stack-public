@@ -1,9 +1,8 @@
-import { createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { Message } from '@psf-core/model/message';
-import { AppState } from '../../app.state';
-import { CoreState } from './core.reducers';
+import { coreFeatureKey, CoreState } from './core.reducers';
 
-const selectCoreState = (state: AppState): CoreState | null => state.core;
+const selectCoreState = createFeatureSelector<CoreState>(coreFeatureKey);
 
 export const selectMessage = createSelector(
   selectCoreState,

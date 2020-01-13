@@ -7,11 +7,12 @@ import { MessageOutletComponent } from './message-outlet.component';
 describe('MessageOutletComponent', () => {
   let component: MessageOutletComponent;
   let fixture: ComponentFixture<MessageOutletComponent>;
+  const initialState = { core: {} };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [MessageOutletComponent, MessageComponent, IconComponent],
-      providers: [provideMockStore()],
+      providers: [provideMockStore({ initialState })],
     }).compileComponents();
   }));
 

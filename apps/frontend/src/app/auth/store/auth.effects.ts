@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { AccessToken, CreateUserDto, LoginUserDto, User, VerificationParams } from '@parkside-stack/api-interfaces';
+import {
+  AccessTokenResponse,
+  CreateUserDto,
+  LoginUserDto,
+  User,
+  VerificationParams,
+} from '@parkside-stack/api-interfaces';
 import { startLoading, stopLoading } from '@psf-core';
 import { AppState } from '@psf/app.state';
 import { Observable, of } from 'rxjs';
@@ -33,7 +39,7 @@ export class AuthEffects {
       switchMap(({ loginUserDto }: { loginUserDto: LoginUserDto }) =>
         this.auth.login(loginUserDto).pipe(
           map((result: Object) => {
-            const accessToken: AccessToken = { accessToken: result['accessToken'] };
+            const accessToken: AccessTokenResponse = { accessToken: result['accessToken'] };
             return loginSuccess({ accessToken });
           }),
           catchError(() => {

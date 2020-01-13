@@ -1,69 +1,82 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiBody,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiImplicitBody,
+  ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
-  ApiUseTags,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {
-  AccessToken,
+  AccessTokenResponse,
   BackendPath,
+  BadRequestErrorResponse,
   CreateUserDto,
   CreateUserParams,
+  InternalServerErrorErrorResponse,
   LoginUserDto,
-  Response,
+  UnauthorizedErrorResponse,
   User,
   VerificationParams,
 } from '@parkside-stack/api-interfaces';
-import { ErrorMessage } from '@psb-shared';
 import { jwt, local } from './strategies';
 import { UsersService } from './users.service';
 
-@ApiUseTags(BackendPath.Users)
+@ApiTags(BackendPath.Users)
 @Controller(BackendPath.Users)
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Post(BackendPath.Register)
   @ApiCreatedResponse({ type: User })
+  @ApiQuery({ name: 'locale', enum: ['en', 'de'] })
+  @ApiBadRequestResponse({ type: BadRequestErrorResponse })
+  @ApiInternalServerErrorResponse({ type: InternalServerErrorErrorResponse })
   async register(@Body() user: CreateUserDto, @Query() queryParams: CreateUserParams): Promise<User> {
-    return this.userService.create(user, queryParams.locale);
+    return new User(await this.userService.create(user, queryParams.locale));
   }
 
   @UseGuards(AuthGuard(local))
   @Post(BackendPath.Login)
   @HttpCode(200)
-  @ApiImplicitBody({ name: LoginUserDto.name, type: LoginUserDto })
-  @ApiForbiddenResponse({ description: ErrorMessage.UNAUTHORIZED })
-  @ApiOkResponse({ type: AccessToken })
-  async login(@Request() req: any): Promise<AccessToken> {
+  @ApiOkResponse({ type: AccessTokenResponse })
+  @ApiBody({ type: LoginUserDto })
+  @ApiUnauthorizedResponse({ type: UnauthorizedErrorResponse })
+  async login(@Request() req: any): Promise<AccessTokenResponse> {
     return this.userService.createAccessToken(req.user);
   }
 
-  @ApiOkResponse({ type: User })
   @Post(`${BackendPath.Verification}/:jwt`)
+  @HttpCode(200)
+  @ApiParam({ name: 'jwt', type: String })
+  @ApiOkResponse({ type: User })
+  @ApiBadRequestResponse({ type: BadRequestErrorResponse })
   async verification(@Param() params: VerificationParams): Promise<User> {
-    return await this.userService.verification(params.jwt);
+    return new User(await this.userService.verification(params.jwt));
   }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard(jwt))
   @Get('me')
-  @ApiForbiddenResponse({ description: ErrorMessage.UNAUTHORIZED })
+  @ApiUnauthorizedResponse({ type: UnauthorizedErrorResponse })
   @ApiOkResponse({ type: User })
   async me(@Request() req: any): Promise<User> {
-    return req.user;
+    return new User(req.user);
   }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard(jwt))
   @Delete('me')
-  @ApiForbiddenResponse({ description: ErrorMessage.UNAUTHORIZED })
-  @ApiOkResponse({ type: Response })
-  async deleteMe(@Request() req: any): Promise<Response> {
-    return this.userService.deleteById(req.user.id);
+  @HttpCode(204)
+  @ApiNoContentResponse({})
+  @ApiUnauthorizedResponse({ type: UnauthorizedErrorResponse })
+  async deleteMe(@Request() req: any): Promise<void> {
+    this.userService.deleteById(req.user.id);
   }
 }

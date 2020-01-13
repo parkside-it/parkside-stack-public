@@ -35,6 +35,10 @@ export class ConfigService {
     return this.checkValue(this.envConfig.ENV);
   }
 
+  get emailVerificationTokenExpirationSeconds(): number {
+    return Number(this.checkValue(this.envConfig.EMAIL_VERIFICATION_TOKEN_EXPIRATION_SECONDS));
+  }
+
   get accessTokenExpirationSeconds(): number {
     return Number(this.checkValue(this.envConfig.ACCESS_TOKEN_EXPIRATION_SECONDS));
   }
@@ -57,6 +61,10 @@ export class ConfigService {
 
   get baseUrl(): string {
     return this.checkValue(this.envConfig.BASE_URL);
+  }
+
+  get translationDirectory(): string {
+    return this.checkValue(this.envConfig.TRANSLATION_DIRECTORY);
   }
 
   private checkValue(value: string | undefined): string {
